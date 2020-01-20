@@ -18,12 +18,38 @@ RCT_EXPORT_METHOD(getChecksum:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromi
     NSString *data = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
 
     if (data == nil) {
-        reject(@"404", @"Unable to find bundle data. Ignore if running locally.", nil);
+        resolve(nil);
         return;
     }
+    
     const char* str = [data UTF8String];
+    
     unsigned char result[CC_SHA256_DIGEST_LENGTH];
     CC_SHA256(str, strlen(str), result);
+
+    NSMutableString *ret = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH*2];
+    for(int i = 0; i<CC_SHA256_DIGEST_LENGTH; i++)
+    {
+        [ret appendFormat:@"%02x",result[i]];
+    }
+
+    resolve(ret);
+}
+
+RCT_EXPORT_METHOD(getChecksumCert:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+    NSError* error = nil;
+    
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"cert" ofType:@"cer"];
+    NSData *nsData = [NSData dataWithContentsOfFile:path];
+    
+   if (nsData == nil) {
+       resolve(nil);
+       return;
+   }
+    
+    unsigned char result[CC_SHA256_DIGEST_LENGTH];
+    CC_SHA256([nsData bytes], [nsData length], result);
 
     NSMutableString *ret = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH*2];
     for(int i = 0; i<CC_SHA256_DIGEST_LENGTH; i++)

@@ -22,72 +22,129 @@ import java.util.Base64;
 
 public class RNBundleChecksumModule extends ReactContextBaseJavaModule {
 
-  private final ReactApplicationContext reactContext;
+    private final ReactApplicationContext reactContext;
 
-  public RNBundleChecksumModule(ReactApplicationContext reactContext) {
-    super(reactContext);
-    this.reactContext = reactContext;
-  }
-
-  @Override
-  public String getName() {
-    return "RNBundleChecksum";
-  }
-
-  @ReactMethod
-  public void getChecksum(Promise promise){
-    BufferedReader br = null;
-    String bundle = null;
-    StringBuilder sb = new StringBuilder();
-    try {
-      AssetManager assetManager = getReactApplicationContext().getAssets();
-      InputStream stream = assetManager.open("index.android.bundle");
-      if (stream == null) {
-        promise.reject("com.bundlechecksum", new Exception("Failed to open bundle file. You may be running in development mode."));
-        return;
-      }
-
-      int size = stream.available();
-      byte[] buffer = new byte[size];
-      stream.read(buffer);
-      stream.close();
-      bundle = new String(buffer);
-
-      if (bundle == null || bundle.equals("")) {
-        promise.reject("com.bundlechecksum", new Exception("Failed to open bundle file. You may be running in development mode."));
-        return;
-      }
-    } catch (Exception ex) {
-      ex.printStackTrace();
-      promise.reject("com.bundlechecksum", new Exception("Failed to open bundle file. You may be running in development mode."));
-      return;
+    public RNBundleChecksumModule(ReactApplicationContext reactContext) {
+        super(reactContext);
+        this.reactContext = reactContext;
     }
 
-    MessageDigest md = null;
-    sb = new StringBuilder();
-    try {
-        md = MessageDigest.getInstance("SHA-256");
-        md.update(bundle.getBytes("UTF-8"));
-        byte[] digest = md.digest();
-        
-        for (int i = 0; i < digest.length; i++) {
-          sb.append(Integer.toString((digest[i] & 0xff) + 0x100, 16).substring(1));
+    @Override
+    public String getName() {
+        return "RNBundleChecksum";
+    }
+
+    @ReactMethod
+    public void getChecksum(Promise promise) {
+        BufferedReader br = null;
+        String bundle = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+            AssetManager assetManager = getReactApplicationContext().getAssets();
+            InputStream stream = assetManager.open("index.android.bundle");
+            if (stream == null) {
+                promise.resolve("");
+                return;
+            }
+
+            int size = stream.available();
+            byte[] buffer = new byte[size];
+            stream.read(buffer);
+            stream.close();
+            bundle = new String(buffer);
+
+            if (bundle == null || bundle.equals("")) {
+                promise.resolve("");
+                return;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            promise.resolve("");
+            return;
         }
 
-        promise.resolve(sb.toString());
-        return;
-    } catch (NoSuchAlgorithmException e) {
-        e.printStackTrace();
-        promise.reject("com.bundlechecksum", e.getMessage());
-        return;
-    } catch (UnsupportedEncodingException e) {
-        e.printStackTrace();
-        promise.reject("com.bundlechecksum", e.getMessage());
-        return;
-    } catch (Exception e) {
-        e.printStackTrace();
-        promise.reject("com.bundlechecksum", e.getMessage());
-        return;
+        MessageDigest md = null;
+        sb = new StringBuilder();
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+            md.update(bundle.getBytes("UTF-8"));
+            byte[] digest = md.digest();
+
+            for (int i = 0; i < digest.length; i++) {
+                sb.append(Integer.toString((digest[i] & 0xff) + 0x100, 16).substring(1));
+            }
+
+            promise.resolve(sb.toString());
+            return;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            promise.resolve("");
+            return;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            promise.resolve("");
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            promise.resolve("");
+            return;
+        }
     }
-  }
+
+    @ReactMethod
+    public void getChecksumCert(Promise promise) {
+        BufferedReader br = null;
+        String bundle = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+            AssetManager assetManager = getReactApplicationContext().getAssets();
+            InputStream stream = assetManager.open("cert.cer");
+            if (stream == null) {
+                promise.resolve("");
+                return;
+            }
+
+            int size = stream.available();
+            byte[] buffer = new byte[size];
+            stream.read(buffer);
+            stream.close();
+            bundle = new String(buffer);
+
+            if (bundle == null || bundle.equals("")) {
+                promise.resolve("");
+                return;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            promise.resolve("");
+            return;
+        }
+
+        MessageDigest md = null;
+        sb = new StringBuilder();
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+            md.update(bundle.getBytes("UTF-8"));
+            byte[] digest = md.digest();
+
+            for (int i = 0; i < digest.length; i++) {
+                sb.append(Integer.toString((digest[i] & 0xff) + 0x100, 16).substring(1));
+            }
+
+            promise.resolve(sb.toString());
+            return;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            promise.resolve("");
+            return;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            promise.resolve("");
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            promise.resolve("");
+            return;
+        }
+    }
 }
