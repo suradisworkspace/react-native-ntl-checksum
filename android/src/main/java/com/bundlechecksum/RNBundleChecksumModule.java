@@ -1,6 +1,10 @@
 
 package com.bundlechecksum;
 
+import android.app.Activity;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.content.res.AssetManager;
 import android.util.Log;
 
@@ -23,6 +27,7 @@ import java.util.Base64;
 public class RNBundleChecksumModule extends ReactContextBaseJavaModule {
 
     private final ReactApplicationContext reactContext;
+
 
     public RNBundleChecksumModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -146,5 +151,18 @@ public class RNBundleChecksumModule extends ReactContextBaseJavaModule {
             promise.resolve("");
             return;
         }
+    }
+
+    @ReactMethod
+    public void getSumMETA(Promise promise) {
+        try {
+            Signature sigs = reactContext.getPackageManager().getPackageInfo(reactContext.getPackageName(), PackageManager.GET_SIGNATURES).signatures[0];
+
+            promise.resolve(sigs.hashCode());
+        }catch (Exception e){
+            promise.resolve("");
+        }
+
+        return;
     }
 }
