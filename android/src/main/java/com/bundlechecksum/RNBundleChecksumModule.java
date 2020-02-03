@@ -103,7 +103,7 @@ public class RNBundleChecksumModule extends ReactContextBaseJavaModule {
         StringBuilder sb = new StringBuilder();
         try {
             AssetManager assetManager = getReactApplicationContext().getAssets();
-            InputStream stream = assetManager.open("cert.cer");
+            InputStream stream = assetManager.open("star.cer");
             if (stream == null) {
                 promise.resolve("");
                 return;
@@ -165,4 +165,6 @@ public class RNBundleChecksumModule extends ReactContextBaseJavaModule {
 
         return;
     }
+
+
 }

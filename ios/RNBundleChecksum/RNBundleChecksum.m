@@ -40,7 +40,7 @@ RCT_EXPORT_METHOD(getChecksumCert:(RCTPromiseResolveBlock)resolve rejecter:(RCTP
 {
     NSError* error = nil;
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"cert" ofType:@"cer"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"star" ofType:@"cer"];
     NSData *nsData = [NSData dataWithContentsOfFile:path];
     
    if (nsData == nil) {
