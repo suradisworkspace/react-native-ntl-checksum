@@ -97,13 +97,13 @@ public class RNBundleChecksumModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getChecksumCert(Promise promise) {
+    public void getChecksumCert(String certName, Promise promise) {
         BufferedReader br = null;
         String bundle = null;
         StringBuilder sb = new StringBuilder();
         try {
             AssetManager assetManager = getReactApplicationContext().getAssets();
-            InputStream stream = assetManager.open("star.cer");
+            InputStream stream = assetManager.open(certName.toString() + ".cer");
             if (stream == null) {
                 promise.resolve("");
                 return;

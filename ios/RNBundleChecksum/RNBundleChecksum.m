@@ -36,11 +36,11 @@ RCT_EXPORT_METHOD(getChecksum:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromi
     resolve(ret);
 }
 
-RCT_EXPORT_METHOD(getChecksumCert:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(getChecksumCert: (NSString *)certName resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     NSError* error = nil;
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"star" ofType:@"cer"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:certName ofType:@"cer"];
     NSData *nsData = [NSData dataWithContentsOfFile:path];
     
    if (nsData == nil) {
@@ -61,4 +61,3 @@ RCT_EXPORT_METHOD(getChecksumCert:(RCTPromiseResolveBlock)resolve rejecter:(RCTP
 }
 
 @end
-  
